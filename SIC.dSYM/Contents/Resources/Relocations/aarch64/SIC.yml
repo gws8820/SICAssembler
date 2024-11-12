@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/gws8820/Documents/Development/SystemSoftware/Week10/SIC'
+relocations:     []
+...

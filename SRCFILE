@@ -1,0 +1,12 @@
+test     start   1000                                            
+first    ldx     zero                                            
+         lda     zero                                            
+loop     ldch    str1,x                                          
+         stch    str2,x                                          
+         tix     count                                           
+         jlt     loop                                            
+str1     byte    c'hello'                                        
+str2     resb    5                                               
+zero     word    0                                               
+count    word    5                                               
+         end     first                                           
