@@ -1,13 +1,12 @@
-1000        test     start   1000                                             
-1000 04101c first    ldx     zero                                             
-1003 00101c          lda     zero                                             
-1006 509012 loop     ldch    str1,x                                           
-1009 549017          stch    str2,x                                           
-100c 2c101f          tix     count                                            
-100f 381006          jlt     loop                                             
-1012 68656c str1     byte    c'hello'                                         
-     6c6f
-1017        str2     resb    5                                                
-101c 000000 zero     word    0                                                
-101f 000005 count    word    5                                                
-1022                 end     first                                            
+Loc: 1000, Label: test, Operation: start, Operand: 1000, Opcode: -
+Loc: 1000, Label: first, Operation: ldx, Operand: zero, Opcode: 04101c
+Loc: 1003, Label: -, Operation: lda, Operand: zero, Opcode: 00101c
+Loc: 1006, Label: loop, Operation: ldch, Operand: str1,x, Opcode: 509012
+Loc: 1009, Label: -, Operation: stch, Operand: str2,x, Opcode: 549017
+Loc: 100c, Label: -, Operation: tix, Operand: count, Opcode: 2c101f
+Loc: 100f, Label: -, Operation: jlt, Operand: loop, Opcode: 381006
+Loc: 1012, Label: str1, Operation: byte, Operand: c'hello', Opcode: 68656c6c6f
+Loc: 1017, Label: str2, Operation: resb, Operand: 5, Opcode: -
+Loc: 101c, Label: zero, Operation: word, Operand: 0, Opcode: 000000
+Loc: 101f, Label: count, Operation: word, Operand: 5, Opcode: 000005
+Loc: 1022, Label: -, Operation: end, Operand: first, Opcode: -

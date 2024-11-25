@@ -137,9 +137,8 @@ int pass2(Instruction *inst) {
     char *ptr = hexcode;
 
     /* START / END / RESB / RESW */
-    if (strcmp(inst->operation, "start") == 0 || strcmp(inst->operation, "end") == 0 || strcmp(inst->operation, "resb") == 0 || strcmp(inst->operation, "resw") == 0) {
+    if (strcmp(inst->operation, "start") == 0 || strcmp(inst->operation, "end") == 0 || strcmp(inst->operation, "resb") == 0 || strcmp(inst->operation, "resw") == 0)
         strcpy(hexcode, "-");
-    }
 
     /* Memory Constants */
     else if (strcmp(inst->operation, "byte") == 0)  {
@@ -161,7 +160,7 @@ int pass2(Instruction *inst) {
         else sprintf(hexcode, "%02x", optab);
 
         int adrctr;
-        if(strstr(inst->operand, ",x")) { // Index Register
+        if (strstr(inst->operand, ",x")) { // Index Register
             *(hexcode + 2) = '9'; // Third Bit of Opcode
             char symbol[19];
             strcpy (symbol, inst->operand);
@@ -188,10 +187,11 @@ int main() {
     char srcline[SRC_MAX];
     char opline[SRC_MAX];
 
-    FILE *srcfile, *optab, *result;
+    FILE *srcfile, *optab, *result, *lisfile;
     srcfile = fopen("SRCFILE", "r");
     optab = fopen("optab.txt", "r");
     result = fopen("result.txt", "w");
+    lisfile = fopen("LISFILE", "w");
 
     if (srcfile == NULL) {
         printf("Failed to read SRCFILE.\n");
@@ -212,19 +212,22 @@ int main() {
         Instruction inst = instructions[i];
         int flag = pass2(&inst);
         printf("Loc: %x, Label: %s, Operation: %s, Operand: %s, Opcode: %s\n\n", inst.loc, strlen(inst.label) > 0 ? inst.label : "-", inst.operation, inst.operand, inst.opcode);
+        fprintf(result, "Loc: %x, Label: %s, Operation: %s, Operand: %s, Opcode: %s\n", inst.loc, strlen(inst.label) > 0 ? inst.label : "-", inst.operation, inst.operand, inst.opcode);
 
-        /* Write result.txt */
-        fprintf(result, "%04x %-6.6s %-8s %-6s  %-49s\n", inst.loc, strcmp(inst.opcode, "-") == 0 ? " " : inst.opcode, strlen(inst.label) > 0 ? inst.label : " ", inst.operation, inst.operand);
+        /* Write LISFILE */
+        fprintf(lisfile, "%04x %-6.6s %-8s %-6s  %-49s\n", inst.loc, strcmp(inst.opcode, "-") == 0 ? " " : inst.opcode, strlen(inst.label) > 0 ? inst.label : " ", inst.operation, inst.operand);
         for (int opindex = 1; 6 * opindex < strlen(inst.opcode) ; opindex++) // If Operand length exceeds 6
-            fprintf(result, "     %.6s\n", (inst.opcode + 6*opindex));
+            fprintf(lisfile, "     %.6s\n", (inst.opcode + 6*opindex));
 
         if(flag == 1 || flag == 3) {
             printf(" **** undefined symbol in operand\n\n");
-            fprintf(result, " **** undefined symbol in operand                       \n");
+            fprintf(result, " **** undefined symbol in operand\n");
+            fprintf(lisfile, " **** undefined symbol in operand                       \n");
         }
         if(flag == 2 || flag == 3) {
             printf(" **** unrecognized operation code\n\n");
-            fprintf(result, " **** unrecognized operation code                       \n");
+            fprintf(result, " **** unrecognized operation code\n");
+            fprintf(lisfile, " **** unrecognized operation code                       \n");
         }
         
     }
@@ -232,6 +235,7 @@ int main() {
     fclose(srcfile);
     fclose(optab);
     fclose(result);
+    fclose(lisfile);
 
     return 0;
 }
