@@ -19,17 +19,20 @@ typedef struct {
 Instruction instructions[LINE_MAX];
 int instruction_count = 0;
 
+/* To Uppercase */
 void l2u(char* string) {
     for (int i = 0; string[i] != '\0'; i++)
         string[i] = toupper(string[i]);
 }
 
+/* Trim Trailling Comma */
 void trim_comma(char *string) {
     size_t length = strlen(string);
     if (length > 0 && string[length - 1] == ',')
         string[length - 1] = '\0';
 }
 
+/* Decode Instruction */
 void decode(char* resline) {
     Instruction *inst = malloc(sizeof(Instruction));
     if (inst == NULL) {
@@ -37,12 +40,14 @@ void decode(char* resline) {
         return;
     }
 
+    /* Set Pointer for Labels */
     char *loc_ptr = strstr(resline, "Loc: ");
     char *label_ptr = strstr(resline, "Label: ");
     char *operation_ptr = strstr(resline, "Operation: ");
     char *operand_ptr = strstr(resline, "Operand: ");
     char *opcode_ptr = strstr(resline, "Opcode: ");
 
+    /* Parse Value */
     if (loc_ptr) sscanf(loc_ptr, "Loc: %x", &inst->loc);
 
     if (label_ptr) {
@@ -62,21 +67,27 @@ void decode(char* resline) {
 
     if (opcode_ptr) sscanf(opcode_ptr, "Opcode: %31s", inst->opcode);
 
+    /* To Uppercase */
     l2u(inst->label);
+    l2u(inst->operation);
+    l2u(inst->operand);
     l2u(inst->opcode);
 
+    /* Add to Instruction Array */
     instructions[instruction_count++] = *inst;
     free(inst);
 }
 
+/* Write Text Record */
 void write_record(FILE *objfile, char *text_buffer, int *line_loc, int *line_length) {
     printf("T%.6X%.2X%s\n", *line_loc, *line_length, text_buffer);
     fprintf(objfile, "T%.6X%.2X%s\n", *line_loc, *line_length, text_buffer);
 
-    text_buffer[0] = '\0';
-    *line_length = 0;
+    text_buffer[0] = '\0'; // Clear Buffer
+    *line_length = 0; // Clear Line Length
 }
 
+/* Run Loader */
 void run(FILE *objfile) {
     char program_name[9];
     strcpy(program_name, instructions[0].label);
@@ -84,6 +95,7 @@ void run(FILE *objfile) {
     int start_loc = instructions[0].loc;
     int line_loc = start_loc;
 
+    /* Write Header Record */
     printf("H%-6s%.6X%.6X\n", program_name, line_loc, program_size);
     fprintf(objfile, "H%-6s%.6X%.6X\n", program_name, line_loc, program_size);
 
@@ -91,20 +103,21 @@ void run(FILE *objfile) {
     int line_length = 0;
     
     for (int i = 1; i < instruction_count; i++) {
-        if (!strcmp(instructions[i].opcode, "-") || 
-            (instructions[i].loc - line_loc > 0x1E)) {
-            write_record(objfile, text_buffer, &line_loc, &line_length);
+        if (!strcmp(instructions[i].opcode, "-") || (instructions[i].loc - line_loc > 0x1E)) { // if OPCODE is "-" or Length > 1E
+            write_record(objfile, text_buffer, &line_loc, &line_length); // Write Text Record
 
+            /* Update LOCCTR */
             if (!strcmp(instructions[i].opcode, "-")) {
                 line_loc = instructions[i + 1].loc;
                 continue;
             } else line_loc = instructions[i].loc;
         }
 
-        strcat(text_buffer, instructions[i].opcode);
-        line_length += strlen(instructions[i].opcode) / 2;
+        strcat(text_buffer, instructions[i].opcode); // Write Opcode to Buffer
+        line_length += strlen(instructions[i].opcode) / 2; // Update Buffer Length
     }
 
+    /* Write End Record */
     printf("E%.6X\n", start_loc);
     fprintf(objfile, "E%.6X\n", start_loc);
 }
@@ -128,6 +141,5 @@ int main() {
 
     fclose(result);
     fclose(objfile);
-
     return 0;
 }
