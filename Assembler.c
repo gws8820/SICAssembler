@@ -32,7 +32,7 @@ int pass1(int curloc, char *srcline) {
     /* SymTab - Add */
     if (strlen(inst->label) > 0)
         add_symtab(inst->label, curloc);
-    else strcmp(inst->label, "-");
+    else strcpy(inst->label, "-");
 
     /* Return Start LOCCTR */
     if (strcmp(inst->operation, "start") == 0) {

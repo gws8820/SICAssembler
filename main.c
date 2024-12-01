@@ -31,11 +31,11 @@ int main() {
             curloc = pass1(curloc, srcline); // Update LOCCTR
 
     /* Run Pass 2 */
-    printf("2-Pass Assembler\n------------------------------------\n");
+    printf("2-Pass Assembler\n-------------------\n");
     pass2(lisfile);
 
     /* Run Loader */
-    printf("\n\nLoader\n------------------------------------\n");
+    printf("\n\nLoader\n-------------------\n");
     load(objfile);
 
     fclose(srcfile);
