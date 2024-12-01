@@ -2,10 +2,11 @@
 A Simple 2-Pass Assembler that generates LISFILE (includes memory address) and OBJFILE (machine code).
 
 
-## Build and Run
-### Compiler
-You need to install complier for your operating system.
+## Usage
+### Prerequisites
+You need to install complier and **Make** for your operating system.
 
+#### Compiler
 - Windows, Linux: gcc
 - MacOS: clang
 
@@ -18,7 +19,12 @@ make
 ```
 
 ### Run
-After placing SRCFILE into SIC_Assembler directory, type
+After placing SRCFILE into SIC_Assembler directory, type:
+- Linux, MacOS
 ```
 ./SICASM
+```
+- Windows
+```
+SICASM.exe
 ```
