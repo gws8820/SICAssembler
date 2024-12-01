@@ -1,39 +1,37 @@
 TARGET = SICASM
 OBJ = Assembler.o Loader.o OpTab.o SymTab.o main.o
 
-UNAME_S := $(shell uname -s)
-
-ifeq ($(UNAME_S), Darwin)  # macOS
-    CC = clang
-    CFLAGS = -Wall -g
-else ifeq ($(UNAME_S), Linux)  # Linux
-    CC = gcc
-    CFLAGS = -Wall -g
-else ifeq ($(OS), Windows_NT)  # Windows
-    CC = gcc
-    CFLAGS = -Wall -g
+ifdef OS
+    ifeq ($(OS), Windows_NT)  # Windows
+        CC = gcc
+        CFLAGS = -Wall -g
+        RM = del /F /Q
+        EXE = .exe
+    endif
 else
-    $(error Unsupported platform: $(UNAME_S))
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S), Darwin)  # macOS
+        CC = clang
+        CFLAGS = -Wall -g
+        RM = rm -f
+        EXE =
+    else ifeq ($(UNAME_S), Linux)  # Linux
+        CC = gcc
+        CFLAGS = -Wall -g
+        RM = rm -f
+        EXE =
+    else
+        $(error Unsupported platform: $(UNAME_S))
+    endif
 endif
 
-all: $(TARGET) clean_obj
+all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) -o $@ $(OBJ)
+	$(CC) $(CFLAGS) -o $@$(EXE) $(OBJ)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
 
-clean_obj:
-ifeq ($(OS), Windows_NT)
-	del /F /Q $(OBJ)
-else
-	rm -f $(OBJ)
-endif
-
 clean:
-ifeq ($(OS), Windows_NT)
-	del /F /Q $(OBJ) $(TARGET).exe
-else
-	rm -f $(OBJ) $(TARGET)
-endif
+	$(RM) $(OBJ) $(TARGET)$(EXE)
