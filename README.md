@@ -13,13 +13,13 @@ You need to install complier and **Make** for your operating system.
 
 ### Compile and Build
 ```
-git clone https://github.com/gws8820/SIC_Assembler
-cd SIC_Assembler
+git clone https://github.com/gws8820/SICAssembler
+cd SICAssembler
 make
 ```
 
 ### Run
-After placing SRCFILE into SIC_Assembler directory, type:
+After placing SRCFILE into SICAssembler directory, type:
 - Linux, MacOS
 ```
 ./SICASM
