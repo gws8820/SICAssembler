@@ -1,5 +1,5 @@
 TARGET = SICASM
-OBJ = Assembler.o Loader.o OpTab.o SymTab.o main.o
+OBJ = Assembler.o ObjWriter.o OpTab.o SymTab.o main.o
 
 ifdef OS
     ifeq ($(OS), Windows_NT)  # Windows

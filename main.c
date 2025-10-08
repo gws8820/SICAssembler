@@ -34,9 +34,9 @@ int main() {
     printf("2-Pass Assembler\n-------------------\n");
     pass2(lisfile);
 
-    /* Run Loader */
-    printf("\n\nLoader\n-------------------\n");
-    load(objfile);
+    /* Write Object File (H/T/E) */
+    printf("\n\nObject File Writer\n-------------------\n");
+    write_objfile(objfile);
 
     fclose(srcfile);
     fclose(optab);

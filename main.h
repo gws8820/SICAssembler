@@ -9,8 +9,8 @@
 int pass1(int curloc, char *srcline);
 void pass2(FILE *lisfile);
 
-/* Loader.c */
-void load(FILE *objfile);
+/* ObjWriter.c */
+void write_objfile(FILE *objfile);
 
 /* OpTab.c */
 void add_optab(char *opline);
